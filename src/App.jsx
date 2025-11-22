@@ -1,6 +1,5 @@
-import { useEffect } from 'react';
-import netlifyIdentity from 'netlify-identity-widget';S
 import React, { useState, useEffect, useRef } from 'react';
+import netlifyIdentity from 'netlify-identity-widget';
 import { Camera, Sparkles, TrendingUp, MessageSquare, Book, Settings, Copy, Download, Upload, Search, Star, Award, Target, Zap, Menu, X, Home, FileText, BarChart3, MessageCircle, BookOpen, Type, Maximize2 } from 'lucide-react';
 
 const ZMapsApp = () => {
@@ -277,23 +276,6 @@ REGRAS:
     };
     
     img.src = currentPost.image;
-  };
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (loginEmail && loginPassword) {
-      localStorage.setItem('zmaps_logged_in', 'true');
-      localStorage.setItem('zmaps_user_email', loginEmail);
-      setIsLoggedIn(true);
-      setLoginEmail('');
-      setLoginPassword('');
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('zmaps_logged_in');
-    localStorage.removeItem('zmaps_user_email');
-    setIsLoggedIn(false);
   };
 
   const acceptCookies = () => {
