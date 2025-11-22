@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import netlifyIdentity from 'netlify-identity-widget';S
 import React, { useState, useEffect, useRef } from 'react';
 import { Camera, Sparkles, TrendingUp, MessageSquare, Book, Settings, Copy, Download, Upload, Search, Star, Award, Target, Zap, Menu, X, Home, FileText, BarChart3, MessageCircle, BookOpen, Type, Maximize2 } from 'lucide-react';
 
@@ -51,14 +53,43 @@ const ZMapsApp = () => {
   const [backgroundColor, setBackgroundColor] = useState('#000000');
   const [backgroundOpacity, setBackgroundOpacity] = useState(0.5);
   const canvasRef = useRef(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('zmaps_logged_in') === 'true';
-  });
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [showCookieConsent, setShowCookieConsent] = useState(() => {
-    return !localStorage.getItem('zmaps_cookies_accepted');
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+const [user, setUser] = useState(null);
+
+useEffect(() => {
+  // Inicializar Netlify Identity
+    netlifyIdentity.on('init', user => {
+      if (user) {
+        setIsLoggedIn(true);
+        setUser(user);
+      }
+    });
+
+    netlifyIdentity.on('login', user => {
+      setIsLoggedIn(true);
+      setUser(user);
+      netlifyIdentity.close();
+    });
+
+    netlifyIdentity.on('logout', () => {
+      setIsLoggedIn(false);
+      setUser(null);
+    });
+
+    netlifyIdentity.init();
+  }, []);
+
+  const handleLogin = () => {
+    netlifyIdentity.open('login');
+  };
+
+  const handleSignup = () => {
+    netlifyIdentity.open('signup');
+  };
+
+  const handleLogout = () => {
+    netlifyIdentity.logout();
+  };
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
 
@@ -270,111 +301,90 @@ REGRAS:
     setShowCookieConsent(false);
   };
 
-  // Login Screen
-  if (!isLoggedIn) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8">
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="white" fillOpacity="0.9"/>
-                  <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="white" fillOpacity="0.7"/>
-                  <circle cx="12" cy="12" r="2" fill="#FBBF24"/>
-                </svg>
-              </div>
-              <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-4 border-white"></div>
+  {/* Login Screen */}
+if (!isLoggedIn) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <div className="relative">
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="white" fillOpacity="0.9"/>
+                <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="white" fillOpacity="0.7"/>
+                <circle cx="12" cy="12" r="2" fill="#FBBF24"/>
+              </svg>
             </div>
+            <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-400 rounded-full border-4 border-white"></div>
           </div>
+        </div>
 
-          {/* Title */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              ZMaps
-            </h1>
-            <p className="text-gray-600 text-sm">
-              Perfil brilhando, cliente chegando
-            </p>
-          </div>
+        {/* Title */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            ZMaps
+          </h1>
+          <p className="text-gray-600 text-sm">
+            Perfil brilhando, cliente chegando
+          </p>
+        </div>
 
-          {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-                placeholder="seu@email.com"
-                required
-                className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+        {/* Buttons */}
+        <div className="space-y-4">
+          <button
+            onClick={handleLogin}
+            className="w-full p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
+          >
+            Entrar
+          </button>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Senha
-              </label>
-              <input
-                type="password"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                className="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+          <button
+            onClick={handleSignup}
+            className="w-full p-4 bg-white border-2 border-blue-600 text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transition-all"
+          >
+            Criar Conta
+          </button>
+        </div>
 
+        {/* Footer Links */}
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <p className="text-xs text-gray-500 text-center mb-3">
+            Ao continuar, você concorda com nossos
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 text-xs">
             <button
-              type="submit"
-              className="w-full p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg"
+              onClick={() => setShowTermsModal(true)}
+              className="text-blue-600 hover:underline"
             >
-              Entrar
+              Termos de Uso
             </button>
-          </form>
-
-          {/* Footer Links */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center mb-3">
-              Ao continuar, você concorda com nossos
-            </p>
-            <div className="flex flex-wrap justify-center gap-3 text-xs">
-              <button
-                onClick={() => setShowTermsModal(true)}
-                className="text-blue-600 hover:underline"
-              >
-                Termos de Uso
-              </button>
-              <span className="text-gray-400">•</span>
-              <button
-                onClick={() => setShowPrivacyModal(true)}
-                className="text-blue-600 hover:underline"
-              >
-                Política de Privacidade
-              </button>
-            </div>
+            <span className="text-gray-400">•</span>
+            <button
+              onClick={() => setShowPrivacyModal(true)}
+              className="text-blue-600 hover:underline"
+            >
+              Política de Privacidade
+            </button>
           </div>
+        </div>
 
-          {/* Contact Info */}
-          <div className="mt-6 p-4 bg-gray-50 rounded-xl">
-            <p className="text-xs text-gray-600 text-center mb-2">Precisa de ajuda?</p>
-            <div className="flex justify-center gap-4 text-xs">
-              <a href="https://wa.me/5511957055256" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">
-                WhatsApp
-              </a>
-              <a href="mailto:zapy@zapy.click" className="text-blue-600 hover:underline">
-                Email
-              </a>
-            </div>
+        {/* Contact Info */}
+        <div className="mt-6 p-4 bg-gray-50 rounded-xl">
+          <p className="text-xs text-gray-600 text-center mb-2">Precisa de ajuda?</p>
+          <div className="flex justify-center gap-4 text-xs">
+            <a href="https://wa.me/5511957055256" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">
+              WhatsApp
+            </a>
+            <a href="mailto:zapy@zapy.click" className="text-blue-600 hover:underline">
+              Email
+            </a>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   const savePost = () => {
     if (!currentPost.generatedCopy) {
