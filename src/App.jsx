@@ -54,16 +54,29 @@ const ZMapsApp = () => {
   const canvasRef = useRef(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 const [user, setUser] = useState(null);
-
+const [isLoading, setIsLoading] = useState(true);
 useEffect(() => {
-  // Inicializar Netlify Identity
-    netlifyIdentity.on('init', user => {
-      if (user) {
-        setIsLoggedIn(true);
-        setUser(user);
-      }
-    });
+  netlifyIdentity.on('init', user => {
+    if (user) {
+      setIsLoggedIn(true);
+      setUser(user);
+    }
+    setIsLoading(false); // ← Adicione esta linha
+  });
 
+  netlifyIdentity.on('login', user => {
+    setIsLoggedIn(true);
+    setUser(user);
+    netlifyIdentity.close();
+  });
+
+  netlifyIdentity.on('logout', () => {
+    setIsLoggedIn(false);
+    setUser(null);
+  });
+
+  netlifyIdentity.init();
+}, []);
     netlifyIdentity.on('login', user => {
       setIsLoggedIn(true);
       setUser(user);
@@ -282,7 +295,28 @@ REGRAS:
     localStorage.setItem('zmaps_cookies_accepted', 'true');
     setShowCookieConsent(false);
   };
+// Loading Screen
+if (isLoading) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-2xl mx-auto mb-4 animate-pulse">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#2563eb" fillOpacity="0.9"/>
+            <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="#9333ea" fillOpacity="0.7"/>
+            <circle cx="12" cy="12" r="2" fill="#FBBF24"/>
+          </svg>
+        </div>
+        <h2 className="text-2xl font-bold text-white mb-2">ZMaps</h2>
+        <p className="text-white opacity-80">Carregando...</p>
+      </div>
+    </div>
+  );
+}
 
+// Login Screen (código existente)
+if (!isLoggedIn) {
+  ...
   {/* Login Screen */}
 if (!isLoggedIn) {
   return (
