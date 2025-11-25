@@ -93,6 +93,9 @@ const handleLogout = () => {
 
 const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 const [showTermsModal, setShowTermsModal] = useState(false);
+const [showCookieConsent, setShowCookieConsent] = useState(() => {
+  return !localStorage.getItem('zmaps_cookies_accepted');
+});
 
   const postTypes = {
     promotion: { label: 'Promoção', icon: '🎉', color: 'bg-red-50 border-red-200' },
