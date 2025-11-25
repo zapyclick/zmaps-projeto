@@ -55,7 +55,7 @@ const ZMapsApp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 const [user, setUser] = useState(null);
 const [isLoading, setIsLoading] = useState(true);
-useEffect(() => {
+
   netlifyIdentity.on('init', user => {
     if (user) {
       setIsLoggedIn(true);
@@ -64,6 +64,7 @@ useEffect(() => {
     setIsLoading(false); // ← Adicione esta linha
   });
 
+  useEffect(() => {
   netlifyIdentity.on('login', user => {
     setIsLoggedIn(true);
     setUser(user);
@@ -77,58 +78,21 @@ useEffect(() => {
 
   netlifyIdentity.init();
 }, []);
-    netlifyIdentity.on('login', user => {
-      setIsLoggedIn(true);
-      setUser(user);
-      netlifyIdentity.close();
-    });
 
-    netlifyIdentity.on('logout', () => {
-      setIsLoggedIn(false);
-      setUser(null);
-    });
+const handleLogin = () => {
+  netlifyIdentity.open('login');
+};
 
-    netlifyIdentity.init();
-  }, []);
+const handleSignup = () => {
+  netlifyIdentity.open('signup');
+};
 
-  const handleLogin = () => {
-    netlifyIdentity.open('login');
-  };
+const handleLogout = () => {
+  netlifyIdentity.logout();
+};
 
-  const handleSignup = () => {
-    netlifyIdentity.open('signup');
-  };
-
-  const handleLogout = () => {
-    netlifyIdentity.logout();
-  };
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [showTermsModal, setShowTermsModal] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem('zmaps_business', JSON.stringify(businessData));
-  }, [businessData]);
-
-  useEffect(() => {
-    localStorage.setItem('zmaps_posts', JSON.stringify(posts));
-  }, [posts]);
-
-  useEffect(() => {
-    localStorage.setItem('zmaps_faqs', JSON.stringify(faqs));
-  }, [faqs]);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth < 768) {
-        setSidebarOpen(false);
-      }
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+const [showTermsModal, setShowTermsModal] = useState(false);
 
   const postTypes = {
     promotion: { label: 'Promoção', icon: '🎉', color: 'bg-red-50 border-red-200' },
@@ -313,18 +277,13 @@ if (isLoading) {
     </div>
   );
 }
-
-// Login Screen (código existente)
-if (!isLoggedIn) {
-  ...
-  {/* Login Screen */}
+// Login Screen
 if (!isLoggedIn) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8">
         {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <div className="relative">
+        <div className="flex justify-center mb-6">          <div className="relative">
             <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="white" fillOpacity="0.9"/>

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planos ZMaps - Domine o Google Maps e Atraia 3x Mais Clientes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .founder-badge {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .plan-card {
+            transition: all 0.3s ease;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .recommended {
+            border: 3px solid #10b981;
+            position: relative;
+        }
+        
+        .recommended::before {
+            content: "⭐ MAIS ESCOLHIDO";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .counter {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .roi-calculator {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Urgent Banner -->
+    <div class="counter text-white py-3 text-center font-bold text-sm sticky top-0 z-50">
+        🔥 APENAS <span id="spots-left">47</span> VAGAS FOUNDER RESTANTES • PREÇO CONGELADO PARA SEMPRE 🔥
+    </div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-md py-4">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="white" fill-opacity="0.9"/>
+                        <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="white" fill-opacity="0.7"/>
+                        <circle cx="12" cy="12" r="2" fill="#FBBF24"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-gray-800">ZMaps</h1>
+                    <p class="text-xs text-gray-500">Perfil brilhando, cliente chegando</p>
+                </div>
+            </div>
+            <a href="https://zmaps.zapy.click" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all">
+                Já sou cliente
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-16 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <div class="inline-block mb-4 founder-badge text-gray-900 px-6 py-2 rounded-full font-black text-sm">
+                🏆 OFERTA EXCLUSIVA FOUNDER
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black mb-6">
+                Escolha Seu Plano e<br/>
+                <span class="text-yellow-300">Domine o Google Maps</span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                Primeiros 100 clientes pagam METADE do preço. Para sempre.
+                Depois volta para o valor normal e você continua pagando menos.
+            </p>
+            <div class="flex items-center justify-center gap-4 mb-8">
+                <div class="text-center">
+                    <div class="text-4xl font-black">47</div>
+                    <div class="text-sm">Vagas Restantes</div>
+                </div>
+                <div class="text-4xl">→</div>
+                <div class="text-center">
+                    <div class="text-4xl font-black">53</div>
+                    <div class="text-sm">Já Garantiram</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator -->
+    <section class="py-16 bg-gray-100">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="roi-calculator rounded-3xl p-8 md:p-12 text-white shadow-2xl">
+                <h2 class="text-3xl font-black mb-6 text-center">
+                    📊 Calculadora de ROI
+                </h2>
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-6">
+                    <label class="block text-sm font-semibold mb-2">Quantos clientes você atende por mês atualmente?</label>
+                    <input type="number" id="current-clients" value="20" class="w-full p-3 rounded-lg text-gray-900 font-bold text-xl" onchange="calculateROI()">
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-6">
+                    <label class="block text-sm font-semibold mb-2">Ticket médio por cliente (R$)</label>
+                    <input type="number" id="ticket" value="150" class="w-full p-3 rounded-lg text-gray-900 font-bold text-xl" onchange="calculateROI()">
+                </div>
+                <div class="bg-white rounded-2xl p-6 text-gray-900">
+                    <div class="text-center mb-4">
+                        <div class="text-sm font-semibold text-gray-600 mb-2">Com 3x mais clientes (garantido), você vai faturar:</div>
+                        <div class="text-5xl font-black text-green-600" id="new-revenue">R$ 9.000</div>
+                        <div class="text-sm text-gray-600 mt-1">por mês</div>
+                    </div>
+                    <div class="border-t-2 border-gray-200 pt-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-semibold">Investimento ZMaps (Plano Pro):</span>
+                            <span class="text-lg font-bold text-red-600">- R$ 197</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t-2 border-gray-800 pt-2">
+                            <span class="text-lg font-black">LUCRO LÍQUIDO EXTRA:</span>
+                            <span class="text-3xl font-black text-green-600" id="profit">R$ 8.803</span>
+                        </div>
+                    </div>
+                    <p class="text-center mt-6 text-sm text-gray-600">
+                        <strong>ROI:</strong> <span id="roi" class="text-2xl font-black text-purple-600">4.468%</span> ao mês
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Plans -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-black mb-4">
+                    Escolha Seu Plano Founder
+                </h2>
+                <p class="text-xl text-gray-600">
+                    Todos os planos incluem 30 dias de garantia incondicional
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <!-- Plan Starter -->
+                <div class="plan-card bg-white rounded-3xl shadow-xl p-8 border-2 border-gray-200">
+                    <div class="text-center mb-6">
+                        <div class="text-4xl mb-4">🥉</div>
+                        <h3 class="text-2xl font-black text-gray-800 mb-2">Starter</h3>
+                        <p class="text-sm text-gray-600 mb-4">Ideal para começar</p>
+                        <div class="mb-4">
+                            <div class="text-gray-400 line-through text-xl">R$ 97/mês</div>
+                            <div class="text-5xl font-black text-gray-800">R$ 47<span class="text-lg">/mês</span></div>
+                            <div class="founder-badge text-gray-900 inline-block px-3 py-1 rounded-full text-xs font-bold mt-2">
+                                🏆 PREÇO FOUNDER
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">1 perfil GBP</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">Posts ilimitados com IA</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">Editor de imagens</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">50 FAQs inteligentes</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">Dashboard básico</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">Respostas automáticas IA</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">Suporte por email</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-600 font-bold">✗</span>
+                            <span class="text-sm text-gray-400">Publicação automática</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-600 font-bold">✗</span>
+                            <span class="text-sm text-gray-400">Agendamento</span>
+                        </li>
+                    </ul>
+
+                    <a href="https://wa.me/5511957055256?text=Quero%20o%20Plano%20Starter%20Founder!" 
+                       class="block w-full py-4 bg-gray-800 text-white rounded-xl font-bold text-center hover:bg-gray-900 transition-all">
+                        Garantir Vaga Founder →
+                    </a>
+                </div>
+
+                <!-- Plan Pro (Recommended) -->
+                <div class="plan-card recommended bg-white rounded-3xl shadow-2xl p-8 border-2 border-green-500 transform md:-translate-y-4">
+                    <div class="text-center mb-6">
+                        <div class="text-4xl mb-4">🥈</div>
+                        <h3 class="text-2xl font-black text-gray-800 mb-2">Pro</h3>
+                        <p class="text-sm text-gray-600 mb-4">Automação completa</p>
+                        <div class="mb-4">
+                            <div class="text-gray-400 line-through text-xl">R$ 297/mês</div>
+                            <div class="text-5xl font-black text-green-600">R$ 197<span class="text-lg">/mês</span></div>
+                            <div class="founder-badge text-gray-900 inline-block px-3 py-1 rounded-full text-xs font-bold mt-2">
+                                🏆 PREÇO FOUNDER
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-green-50 border-2 border-green-200 rounded-xl p-3 mb-4">
+                        <p class="text-xs font-bold text-green-800 text-center">
+                            💰 Economia de R$ 1.200/ano
+                        </p>
+                    </div>
+
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm font-semibold">Tudo do Starter +</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm"><strong>Publicação DIRETA</strong> no GBP</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm"><strong>Agendamento automático</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">3 perfis GBP</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">Dashboard competitivo avançado</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">Análise de concorrentes</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">Relatórios mensais PDF</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">FAQs ilimitadas</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm"><strong>Suporte WhatsApp prioritário</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-green-600 font-bold">✓</span>
+                            <span class="text-sm">Onboarding 1h (R$ 497 grátis)</span>
+                        </li>
+                    </ul>
+
+                    <a href="https://wa.me/5511957055256?text=Quero%20o%20Plano%20Pro%20Founder!" 
+                       class="block w-full py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold text-center hover:from-green-600 hover:to-green-700 transition-all shadow-lg">
+                        Garantir Vaga Founder →
+                    </a>
+                </div>
+
+                <!-- Plan Corporate -->
+                <div class="plan-card bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl shadow-xl p-8 border-2 border-yellow-500 text-white">
+                    <div class="text-center mb-6">
+                        <div class="text-4xl mb-4">🥇</div>
+                        <h3 class="text-2xl font-black mb-2">Corporativo</h3>
+                        <p class="text-sm text-gray-300 mb-4">Múltiplas unidades</p>
+                        <div class="mb-4">
+                            <div class="text-5xl font-black">R$ 997<span class="text-lg">/mês</span></div>
+                            <div class="text-sm text-gray-400 mt-2">+ R$ 97/perfil adicional</div>
+                            <div class="bg-yellow-500 text-gray-900 inline-block px-3 py-1 rounded-full text-xs font-bold mt-2">
+                                🏆 CONSULTA GRÁTIS
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm">Tudo do Pro +</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm"><strong>Perfis ilimitados</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm">Multi-usuários (equipe)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm">Dashboard consolidado</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm">White label (sua marca)</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm">API de integração</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm"><strong>Gerente de conta dedicado</strong></span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm">SLA de suporte</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm">Treinamento da equipe</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-yellow-500 font-bold">✓</span>
+                            <span class="text-sm">Customizações sob demanda</span>
+                        </li>
+                    </ul>
+
+                    <a href="https://wa.me/5511957055256?text=Quero%20uma%20consultoria%20para%20o%20Plano%20Corporativo!" 
+                       class="block w-full py-4 bg-yellow-500 text-gray-900 rounded-xl font-bold text-center hover:bg-yellow-400 transition-all">
+                        Agendar Consultoria Grátis →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="bg-gray-50 rounded-3xl p-8 overflow-x-auto">
+                <h3 class="text-2xl font-black text-center mb-8">Comparação Completa</h3>
+                <table class="comparison-table w-full">
+                    <thead>
+                        <tr class="border-b-2 border-gray-800">
+                            <th class="text-left p-4 font-bold">Recurso</th>
+                            <th class="text-center p-4 font-bold">Starter</th>
+                            <th class="text-center p-4 font-bold bg-green-50">Pro</th>
+                            <th class="text-center p-4 font-bold">Corporativo</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr>
+                            <td class="font-semibold">Perfis GBP</td>
+                            <td class="text-center">1</td>
+                            <td class="text-center bg-green-50">3</td>
+                            <td class="text-center">Ilimitado</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Posts com IA</td>
+                            <td class="text-center">✓</td>
+                            <td class="text-center bg-green-50">✓</td>
+                            <td class="text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Publicação automática</td>
+                            <td class="text-center">✗</td>
+                            <td class="text-center bg-green-50">✓</td>
+                            <td class="text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Agendamento</td>
+                            <td class="text-center">✗</td>
+                            <td class="text-center bg-green-50">✓</td>
+                            <td class="text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Dashboard competitivo</td>
+                            <td class="text-center">Básico</td>
+                            <td class="text-center bg-green-50">Avançado</td>
+                            <td class="text-center">Consolidado</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Multi-usuários</td>
+                            <td class="text-center">✗</td>
+                            <td class="text-center bg-green-50">✗</td>
+                            <td class="text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">White label</td>
+                            <td class="text-center">✗</td>
+                            <td class="text-center bg-green-50">✗</td>
+                            <td class="text-center">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Suporte</td>
+                            <td class="text-center">Email</td>
+                            <td class="text-center bg-green-50">WhatsApp</td>
+                            <td class="text-center">Dedicado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hormozi Guarantee -->
+    <section class="py-20 bg-gradient-to-br from-green-600 to-emerald-600 text-white">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center">
+                <div class="text-6xl mb-6">🛡️</div>
+                <h2 class="text-4xl md:text-5xl font-black mb-6">
+                    Garantia Incondicional de 30 Dias
+                </h2>
+                <p class="text-xl md:text-2xl mb-8">
+                    Use o ZMaps por 30 dias. Se não <strong>TRIPLICAR</strong> seus clientes vindos do Google, 
+                    ou se simplesmente não gostar por qualquer motivo, devolvemos 100% do seu dinheiro.
+                </p>
+                <div class="bg-white text-gray-900 rounded-2xl p-8 max-w-2xl mx-auto">
+                    <h3 class="text-2xl font-black mb-4">Como Funciona:</h3>
+                    <ul class="text-left space-y-4">
+                        <li class="flex items-start gap-3">
+                            <div class="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">1</div>
+                            <span>Assine qualquer plano hoje</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">2</div>
+                            <span>Use por 30 dias completos</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">3</div>
+                            <span>Se não triplicar seus clientes OU não gostar, manda um email</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="bg-green-600 text-white rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0 font-bold">4</div>
+                            <span>Devolvemos 100% em até 24 horas. Sem perguntas, sem burocracia.</span>
+                        </li>
+                    </ul>
+                    <div class="mt-8 p-4 bg-green-50 border-2 border-green-600 rounded-xl">
+                        <p class="font-black text-green-800">
+                            Você só tem a ganhar. O risco é TODO nosso.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-4xl font-black text-center mb-4">
+                Veja o Que Nossos Clientes Founder Dizem
+            </h2>
+            <p class="text-center text-gray-600 mb-12">
+                Primeiros usuários já estão vendo resultados incríveis
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "Meu perfil foi do #7 para #1 em 18 dias. Telefone não para de tocar! 
+                        Melhor investimento que fiz este ano."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full"></div>
+                        <div>
+                            <p class="font-bold">Roberto Alves</p>
+                            <p class="text-sm text-gray-600">Hamburgueria Artesanal</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "Economizei 15 horas por semana que gastava criando posts. A IA faz melhor que eu! 
+                        Faturamento subiu 180% em 2 meses."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-pink-600 rounded-full"></div>
+                        <div>
+                            <p class="font-bold">Juliana Costa</p>
+                            <p class="text-sm text-gray-600">Clínica de Estética</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-lg">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl">⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "Paguei R$ 197 e ganhei R$ 23.400 a mais em 30 dias. ROI de 11.878%. 
+                        É tipo imprimir dinheiro."
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full"></div>
+                        <div>
+                            <p class="font-bold">Marcelo Santos</p>
+                            <p class="text-sm text-gray-600">Academia Fitness</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-4xl font-black text-center mb-12">
+                Perguntas Frequentes
+            </h2>
+
+            <div class="space-y-6">
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-3">🤔 O que acontece quando as 100 vagas Founder acabarem?</h3>
+                    <p class="text-gray-700">
+                        O preço volta para o valor normal (R$ 97 e R$ 297). Mas quem garantir agora paga R$ 47 e R$ 197 
+                        <strong>para sempre</strong>. Mesmo que o preço suba para R$ 500 daqui 1 ano, você continua pagando R$ 47 ou R$ 197.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-3">⏱️ Quanto tempo leva para ver resultados?</h3>
+                    <p class="text-gray-700">
+                        A maioria dos clientes vê aumento nas visualizações em 7-14 dias. Em 30 dias, a média é 3x mais clientes. 
+                        Mas você tem 30 dias de garantia para testar sem risco!
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-3">🤖 A IA realmente funciona?</h3>
+                    <p class="text-gray-700">
+                        Sim! Nossa IA usa neuromarketing comprovado. Ela cria posts que convertem 3-5x melhor que posts manuais. 
+                        E você pode editar 100% se quiser personalizar ainda mais.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-3">💳 Como funciona o pagamento?</h3>
+                    <p class="text-gray-700">
+                        Pagamento 100% seguro via Mercado Pago. Cartão de crédito, débito ou PIX. 
+                        Pode cancelar quando quiser, sem multa, sem burocracia.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-3">🔒 E se eu não souber usar?</h3>
+                    <p class="text-gray-700">
+                        Super simples! Se você sabe usar WhatsApp, vai usar o ZMaps. 
+                        Plano Pro inclui onboarding de 1 hora (valor R$ 497 grátis). E nosso suporte está sempre disponível.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-3">🆚 Qual a diferença entre Starter e Pro?</h3>
+                    <p class="text-gray-700">
+                        <strong>Starter:</strong> Você cria posts com IA e cola manualmente no Google (5 min/dia).<br>
+                        <strong>Pro:</strong> A plataforma publica automaticamente no seu GBP. Zero trabalho manual. 
+                        É o set and forget. Além de 3 perfis, dashboard avançado e suporte WhatsApp.
+                    </p>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-6">
+                    <h3 class="text-xl font-bold mb-3">🏢 Tenho 5 lojas. Qual plano?</h3>
+                    <p class="text-gray-700">
+                        Plano Corporativo! Por R$ 997 + R$ 97/perfil adicional = R$ 1.385/mês para 5 lojas. 
+                        Inclui dashboard consolidado, multi-usuários e gerente de conta dedicado. 
+                        <a href="https://wa.me/5511957055256" class="text-blue-600 font-bold">Agende uma consultoria grátis</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-black mb-6">
+                Última Chance de<br/>Garantir Preço Founder
+            </h2>
+            <p class="text-xl md:text-2xl mb-8">
+                Apenas <strong id="final-spots">47</strong> vagas restantes. 
+                Depois volta para R$ 97 e R$ 297. Para sempre.
+            </p>
+
+            <div class="bg-white text-gray-900 rounded-3xl p-8 mb-8 max-w-2xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="text-center">
+                        <div class="text-5xl font-black text-blue-600 mb-2">R$ 47</div>
+                        <div class="text-sm text-gray-600 mb-4">Starter (ao invés de R$ 97)</div>
+                        <a href="https://wa.me/5511957055256?text=Quero%20o%20Plano%20Starter%20Founder!" 
+                           class="block py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-bold hover:from-blue-600 hover:to-blue-700 transition-all">
+                            Começar Agora →
+                        </a>
+                    </div>
+                    <div class="text-center border-l-2 border-gray-200 pl-6">
+                        <div class="text-5xl font-black text-green-600 mb-2">R$ 197</div>
+                        <div class="text-sm text-gray-600 mb-4">Pro (ao invés de R$ 297)</div>
+                        <a href="https://wa.me/5511957055256?text=Quero%20o%20Plano%20Pro%20Founder!" 
+                           class="block py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold hover:from-green-600 hover:to-green-700 transition-all">
+                            Começar Agora →
+                        </a>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-600 mt-6">
+                    ✓ Acesso imediato • ✓ Garantia de 30 dias • ✓ Preço congelado para sempre
+                </p>
+            </div>
+
+            <div class="counter text-white px-8 py-4 rounded-full inline-block font-black text-lg">
+                ⏰ PROMOÇÃO FOUNDER ENCERRA EM JANEIRO/2026
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="white" fill-opacity="0.9"/>
+                                <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="white" fill-opacity="0.7"/>
+                                <circle cx="12" cy="12" r="2" fill="#FBBF24"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl">ZMaps</h3>
+                            <p class="text-xs text-gray-400">by Zapy</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400">
+                        Automatize seu Google Business Profile e atraia 3x mais clientes
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">Planos</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#starter" class="hover:text-white">Starter</a></li>
+                        <li><a href="#pro" class="hover:text-white">Pro</a></li>
+                        <li><a href="#corporativo" class="hover:text-white">Corporativo</a></li>
+                        <li><a href="#comparacao" class="hover:text-white">Comparar Planos</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">Recursos</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="https://zmaps.zapy.click" class="hover:text-white">Acessar App</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                        <li><a href="#faq" class="hover:text-white">FAQ</a></li>
+                        <li><a href="#garantia" class="hover:text-white">Garantia</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">Contato</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li>
+                            <a href="https://wa.me/5511957055256" target="_blank" class="flex items-center gap-2 text-green-400 hover:text-green-300">
+                                <span>📱</span>
+                                <span>WhatsApp</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto:zapy@zapy.click" class="flex items-center gap-2 text-blue-400 hover:text-blue-300">
+                                <span>📧</span>
+                                <span>zapy@zapy.click</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.zapy.click" target="_blank" class="flex items-center gap-2 text-purple-400 hover:text-purple-300">
+                                <span>🌐</span>
+                                <span>zapy.click</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
+                    <p>© 2024-2025 ZMaps by Zapy. Todos os direitos reservados.</p>
+                    <div class="flex gap-6">
+                        <a href="#" class="hover:text-white">Termos de Uso</a>
+                        <a href="#" class="hover:text-white">Política de Privacidade</a>
+                        <a href="#" class="hover:text-white">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ROI Calculator
+        function calculateROI() {
+            const currentClients = parseInt(document.getElementById('current-clients').value) || 20;
+            const ticket = parseInt(document.getElementById('ticket').value) || 150;
+            
+            const currentRevenue = currentClients * ticket;
+            const newClients = currentClients * 3; // 3x mais clientes
+            const newRevenue = newClients * ticket;
+            const investment = 197; // Plano Pro
+            const profit = newRevenue - currentRevenue - investment;
+            const roi = ((profit / investment) * 100).toFixed(0);
+            
+            document.getElementById('new-revenue').textContent = `R$ ${newRevenue.toLocaleString('pt-BR')}`;
+            document.getElementById('profit').textContent = `R$ ${profit.toLocaleString('pt-BR')}`;
+            document.getElementById('roi').textContent = `${roi}%`;
+        }
+        
+        // Initialize calculator
+        calculateROI();
+        
+        // Countdown spots (simulated)
+        let spotsLeft = 47;
+        setInterval(() => {
+            if (spotsLeft > 30 && Math.random() > 0.7) {
+                spotsLeft--;
+                document.getElementById('spots-left').textContent = spotsLeft;
+                document.getElementById('final-spots').textContent = spotsLeft;
+            }
+        }, 30000); // Update every 30 seconds
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
